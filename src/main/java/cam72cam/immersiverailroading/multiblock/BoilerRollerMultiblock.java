@@ -8,6 +8,10 @@ import cam72cam.immersiverailroading.items.nbt.ItemPlateType;
 import cam72cam.immersiverailroading.library.ItemComponentType;
 import cam72cam.immersiverailroading.library.PlateType;
 import cam72cam.immersiverailroading.tile.TileMultiblock;
+import cam72cam.immersiverailroading.util.energy.IEnergyStorage;
+import cam72cam.immersiverailroading.util.math.BlockPos;
+import cam72cam.immersiverailroading.util.math.Rotation;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -62,14 +66,14 @@ public class BoilerRollerMultiblock extends Multiblock {
 		}
 
 		@Override
-		public boolean onBlockActivated(EntityPlayer player, EnumHand hand, BlockPos offset) {
+		public boolean onBlockActivated(EntityPlayer player, BlockPos offset) {
 			if (world.isRemote) {
 				return false;
 			}
 			
 			if (!player.isSneaking()) {
-				ItemStack held = player.getHeldItem(hand);
-				if (held.isEmpty()) {
+				ItemStack held = player.getHeldItem();
+				if (held == null) {
 					TileMultiblock craftTe = getTile(crafting);
 					if (craftTe == null) {
 						return false;
@@ -78,18 +82,18 @@ public class BoilerRollerMultiblock extends Multiblock {
 					ItemStack outstack = craftTe.getContainer().getStackInSlot(1);
 					world.spawnEntityInWorld(new EntityItem(world, player.posX, player.posY, player.posZ, outstack));
 					
-					craftTe.getContainer().setStackInSlot(1, ItemStack.EMPTY);
+					craftTe.getContainer().setStackInSlot(1, null);
 				} else if (held.getItem() == IRItems.ITEM_PLATE && ItemPlateType.get(held) == PlateType.BOILER) {
 					TileMultiblock craftTe = getTile(crafting);
 					if (craftTe == null) {
 						return false;
 					}
-					if (craftTe.getContainer().getStackInSlot(0).isEmpty()) {
+					if (craftTe.getContainer().getStackInSlot(0) == null) {
 						ItemStack inputStack = held.copy();
-						inputStack.setCount(1);
+						inputStack.stackSize = 1;
 						craftTe.getContainer().setStackInSlot(0, inputStack);
-						held.shrink(1);
-						player.setHeldItem(hand, held);
+						held.stackSize = held.stackSize - 1;
+						player.inventory.mainInventory[player.inventory.currentItem] = held;
 					}
 				}
 			}
@@ -127,7 +131,7 @@ public class BoilerRollerMultiblock extends Multiblock {
 			
 			if (world.isRemote) {
 				if (craftTe.getRenderTicks() % 10 == 0 && craftTe.getCraftProgress() != 0) {
-					world.playSound(craftTe.getPos().getX(), craftTe.getPos().getY(), craftTe.getPos().getZ(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1.0f, 0.2f, false);
+					world.playSound(craftTe.xCoord, craftTe.yCoord, craftTe.zCoord, SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1.0f, 0.2f, false);
 				}
 				return;
 			}

@@ -12,6 +12,7 @@ import cam72cam.immersiverailroading.ImmersiveRailroading;
 import cam72cam.immersiverailroading.entity.EntityRidableRollingStock;
 import cam72cam.immersiverailroading.entity.EntityRidableRollingStock.StaticPassenger;
 import cam72cam.immersiverailroading.util.BufferUtil;
+import cam72cam.immersiverailroading.util.math.Vec3d;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -28,7 +29,7 @@ public class PassengerPositionsPacket implements IMessage {
 		//Reflection
 	}
 	public PassengerPositionsPacket(EntityRidableRollingStock stock) {
-		this.dimension = stock.getEntityWorld().provider.getDimension();
+		this.dimension = stock.worldObj.provider.dimensionId;
 		this.stockID = stock.getPersistentID();
 		this.passengerPositions = stock.passengerPositions;
 		this.staticPassengers = stock.staticPassengers;

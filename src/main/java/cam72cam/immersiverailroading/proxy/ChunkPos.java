@@ -18,7 +18,7 @@ public class ChunkPos {
 	}
 	
 	public ChunkPos(Entity entity) {
-		this(entity.getEntityWorld(), entity.getPosition());
+		this(entity.worldObj, new BlockPos(entity.posX,entity.posY,entity.posZ));
 	}
 
 	@Override

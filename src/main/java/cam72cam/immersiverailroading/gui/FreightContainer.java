@@ -1,9 +1,9 @@
 package cam72cam.immersiverailroading.gui;
 
 import cam72cam.immersiverailroading.entity.CarFreight;
+import cam72cam.immersiverailroading.util.items.IItemHandler;
 import net.minecraft.inventory.IInventory;
 
-@ChestContainer
 public class FreightContainer extends ContainerBase {
 	
 	private CarFreight freight;

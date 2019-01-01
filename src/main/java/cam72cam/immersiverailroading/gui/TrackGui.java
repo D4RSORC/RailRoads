@@ -17,6 +17,8 @@ import cam72cam.immersiverailroading.library.TrackPositionType;
 import cam72cam.immersiverailroading.net.ItemRailUpdatePacket;
 import cam72cam.immersiverailroading.tile.TileRailPreview;
 import cam72cam.immersiverailroading.util.OreHelper;
+import cam72cam.immersiverailroading.util.math.BlockPos;
+import cam72cam.immersiverailroading.util.math.NonNullList;
 import cpw.mods.fml.client.config.GuiCheckBox;
 import cpw.mods.fml.client.config.GuiSlider;
 import net.minecraft.client.Minecraft;
@@ -71,8 +73,8 @@ public class TrackGui extends GuiScreen {
 	private BlockPos tilePreviewPos;
 
 	public TrackGui() {
-		slot = Minecraft.getMinecraft().player.inventory.currentItem;
-		ItemStack stack = Minecraft.getMinecraft().player.getHeldItemMainhand();
+		slot = Minecraft.getMinecraft().thePlayer.inventory.currentItem;
+		ItemStack stack = Minecraft.getMinecraft().thePlayer.getHeldItem();
 		init(stack);
 	}
 
@@ -97,7 +99,7 @@ public class TrackGui extends GuiScreen {
 		isGradeCrossing = settings.isGradeCrossing;
 		NonNullList<ItemStack> oreDict = NonNullList.create();
 		
-		oreDict.add(new ItemStack(Items.AIR));
+		oreDict.add(null);
 		
 		for (ItemStack ore : OreHelper.IR_RAIL_BED.getOres()) {
 			if (ore.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
@@ -151,13 +153,13 @@ public class TrackGui extends GuiScreen {
 	}
 	
 	public String getBedstackName() {
-		if (bedSelector.choosenItem.getItem() != Items.AIR) {
+		if (bedSelector.choosenItem.getItem() != null) {
 			return bedSelector.choosenItem.getDisplayName();
 		}
 		return GuiText.NONE.toString();
 	}
 	public String getBedFillName() {
-		if (bedFillSelector.choosenItem.getItem() != Items.AIR) {
+		if (bedFillSelector.choosenItem.getItem() != null) {
 			return bedFillSelector.choosenItem.getDisplayName();
 		}
 		return GuiText.NONE.toString();
@@ -170,7 +172,7 @@ public class TrackGui extends GuiScreen {
 		typeButton = new GuiButton(buttonID++, this.width / 2 - 100, this.height / 8 - 24 + buttonID * 22-1, GuiText.SELECTOR_TYPE.toString(type));
 		this.buttonList.add(typeButton);
 
-		this.lengthInput = new GuiTextField(buttonID++, this.fontRenderer, this.width / 2 - 100, this.height / 8 - 24 + buttonID * 22, 200, 20);
+		this.lengthInput = new GuiTextField(this.fontRendererObj, this.width / 2 - 100, this.height / 8 - 24 + buttonID * 22, 200, 20);
 		this.lengthInput.setText("" + length);
 		this.lengthInput.setMaxStringLength(5);
 		this.lengthInput.setValidator(this.integerFilter);
@@ -214,7 +216,7 @@ public class TrackGui extends GuiScreen {
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
+	protected void actionPerformed(GuiButton button) {
 		if (button == typeButton) {
 			type =  TrackItems.values()[((type.ordinal() + 1) % (TrackItems.values().length))];
 			typeButton.displayString = GuiText.SELECTOR_TYPE.toString(type);
@@ -246,7 +248,7 @@ public class TrackGui extends GuiScreen {
 		}
 	}
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+	protected void keyTyped(char typedChar, int keyCode) {
         this.lengthInput.textboxKeyTyped(typedChar, keyCode);
         // Enter or ESC
         if (keyCode == 1 || keyCode == 28 || keyCode == 156) {
@@ -266,7 +268,7 @@ public class TrackGui extends GuiScreen {
         }
 	}
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         this.lengthInput.mouseClicked(mouseX, mouseY, mouseButton);

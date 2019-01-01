@@ -29,26 +29,26 @@ public class ItemRailAugment extends Item {
 	public ItemRailAugment() {
 		super();
 		setUnlocalizedName(ImmersiveRailroading.MODID + ":" + NAME);
-        setRegistryName(new ResourceLocation(ImmersiveRailroading.MODID, NAME));
+        //setRegistryName(new ResourceLocation(ImmersiveRailroading.MODID, NAME));
         this.setCreativeTab(ItemTabs.MAIN_TAB);
         this.setMaxStackSize(16);
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public boolean onItemUse(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (BlockUtil.isIRRail(world, pos)) {
 			TileRailBase te = TileRailBase.get(world, pos);
 			if (te != null) {
-				ItemStack stack = player.getHeldItem(hand);
+				ItemStack stack = player.getHeldItem();
 				if (te.getAugment() == null && (player.isCreative() || Gauge.from(te.getTrackGauge()) == ItemGauge.get(stack))) {
 					Augment augment = ItemAugmentType.get(stack);
 					TileRail parent = te.getParentTile();
 					if (parent == null) {
-						return EnumActionResult.FAIL;
+						return false;
 					}
 					switch(augment) {
 					case WATER_TROUGH:
-						return EnumActionResult.FAIL;
+						return false;
 						/*
 						if (parent.getRotationQuarter() != 0) {
 							return EnumActionResult.FAIL;
@@ -62,7 +62,7 @@ public class ItemRailAugment extends Item {
 						switch(parent.info.settings.type) {
 						case SWITCH:
 						case TURN:
-							return EnumActionResult.FAIL; 
+							return false; 
 						default:
 							break;
 						}
@@ -76,11 +76,11 @@ public class ItemRailAugment extends Item {
 							stack.setCount(stack.getCount()-1);;
 						}
 					}
-					return EnumActionResult.SUCCESS;
+					return true;
 				}
 			}
 		}
-		return EnumActionResult.PASS;
+		return true;
 	}
 	
 	@Override

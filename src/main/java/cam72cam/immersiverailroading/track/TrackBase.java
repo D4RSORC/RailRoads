@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public abstract class TrackBase {
 	public BuilderBase builder;
@@ -34,8 +35,9 @@ public abstract class TrackBase {
 	@SuppressWarnings("deprecation")
 	public boolean canPlaceTrack() {
 		BlockPos pos = getPos();
-		IBlockState down = builder.info.world.getBlockState(pos.down());
-		boolean downOK = (down.isTopSolid() || !Config.ConfigDamage.requireSolidBlocks && !builder.info.world.isAirBlock(pos.down().getX(),pos.down().getY(),pos.down().getZ())) ||
+		int down = builder.info.world.getBlockMetadata(pos.down().getX(),pos.down().getY(),pos.down().getZ());
+		boolean solid = World.doesBlockHaveSolidTopSurface(builder.info.world,pos.down().getX(),pos.down().getY(),pos.down().getZ());
+		boolean downOK = (solid || !Config.ConfigDamage.requireSolidBlocks && !builder.info.world.isAirBlock(pos.down().getX(),pos.down().getY(),pos.down().getZ())) ||
 				(BlockUtil.canBeReplaced(builder.info.world, pos.down(), false) && builder.info.settings.railBedFill.getItem() != null) ||
 				solidNotRequired || BlockUtil.isIRRail(builder.info.world, pos);
 		return BlockUtil.canBeReplaced(builder.info.world, pos, flexible || builder.overrideFlexible) && downOK;
@@ -45,13 +47,13 @@ public abstract class TrackBase {
 		BlockPos pos = getPos();
 
 		if (builder.info.settings.railBedFill.getItem() != null && BlockUtil.canBeReplaced(builder.info.world, pos.down(), false)) {
-			builder.info.world.setBlockState(pos.down(), BlockUtil.itemToBlockState(builder.info.settings.railBedFill));
+			builder.info.world.setBlockMetadataWithNotify(pos.down().getX(),pos.down().getY(),pos.down().getZ(), BlockUtil.itemToBlockState(builder.info.settings.railBedFill),3);
 		}
 		
 		NBTTagCompound replaced = null;
 		
-		IBlockState state = builder.info.world.getBlockState(pos);
-		Block removed = state.getBlock();
+		int state = builder.info.world.getBlockMetadata(pos.getX(),pos.getY(),pos.getZ());
+		Block removed = builder.info.world.getBlock(pos.getX(),pos.getY(),pos.getZ());;
 		TileRailBase te = null;
 		if (removed != null) {
 			if (removed instanceof BlockRailBase) {
@@ -60,14 +62,14 @@ public abstract class TrackBase {
 					replaced = te.serializeNBT();
 				}
 			} else {				
-				removed.dropBlockAsItem(builder.info.world, pos, state, 0);
+				removed.dropBlockAsItem(builder.info.world, pos.getX(),pos.getY(),pos.getZ(), state, 0);
 			}
 		}
 		
 		if (te != null) {
 			te.setWillBeReplaced(true);
 		}
-		builder.info.world.setBlockState(pos, getBlockState(), 3);
+		builder.info.world.setBlockMetadataWithNotify(pos.getX(),pos.getY(),pos.getZ(), getBlockState(), 3);
 		if (te != null) {
 			te.setWillBeReplaced(false);
 		}
@@ -83,8 +85,8 @@ public abstract class TrackBase {
 		tr.setBedHeight(getBedHeight());
 		return tr;
 	}
-	public IBlockState getBlockState() {
-		return block.getDefaultState();
+	public int getBlockState() {
+		return 0;
 	}
 
 	public BlockPos getPos() {

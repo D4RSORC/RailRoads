@@ -27,7 +27,7 @@ import trackapi.lib.Util;
 
 public class SpawnUtil {
 	public static void placeStock(EntityPlayer player, World worldIn, BlockPos pos, EntityRollingStockDefinition def, List<ItemComponentType> list) {
-		ITrack initte = Util.getTileEntity(worldIn, new Vec3d(pos.add(0, 0.7, 0)), true);
+		ITrack initte = Util.getTileEntity(worldIn, new Vec3d(pos.add(0, 0.7, 0)).getVec(), true);
 		if (initte == null) {
 			return;
 		}

@@ -4,8 +4,11 @@ import cam72cam.immersiverailroading.ImmersiveRailroading;
 import cam72cam.immersiverailroading.library.CraftingMachineMode;
 import cam72cam.immersiverailroading.multiblock.Multiblock.MultiblockInstance;
 import cam72cam.immersiverailroading.net.MultiblockSelectCraftPacket;
+import cam72cam.immersiverailroading.util.energy.EnergyStorage;
+import cam72cam.immersiverailroading.util.items.ItemStackHandler;
 import cam72cam.immersiverailroading.util.math.BlockPos;
 import cam72cam.immersiverailroading.util.math.Rotation;
+import cam72cam.immersiverailroading.util.nbt.NBTUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -17,7 +20,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
@@ -26,11 +28,11 @@ import net.minecraft.world.IBlockAccess;
 public class TileMultiblock extends SyncdTileEntity implements ITickable {
 	
 	public static TileMultiblock get(IBlockAccess world, BlockPos pos) {
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getTileEntity(pos.getX(),pos.getY(),pos.getZ());
 		return te instanceof TileMultiblock ? (TileMultiblock) te : null;
 	}
 	
-	private IBlockState replaced;
+	private int replaced;
 	private BlockPos offset;
 	private Rotation rotation;
 	private String name;
@@ -40,7 +42,7 @@ public class TileMultiblock extends SyncdTileEntity implements ITickable {
 	
 	//Crafting
 	private int craftProgress = 0;
-	private ItemStack craftItem = ItemStack.EMPTY;
+	private ItemStack craftItem = null;
 	private ItemStackHandler container = new ItemStackHandler(0) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -81,7 +83,7 @@ public class TileMultiblock extends SyncdTileEntity implements ITickable {
     	return super.isLoaded() && this.name != null;
     }
 	
-	public void configure(String name, Rotation rot, BlockPos offset, IBlockState replaced) {
+	public void configure(String name, Rotation rot, BlockPos offset, int replaced) {
 		this.name = name;
 		this.rotation = rot;
 		this.offset = offset;
@@ -93,12 +95,12 @@ public class TileMultiblock extends SyncdTileEntity implements ITickable {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		nbt = super.writeToNBT(nbt);
+	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
 		
 		if (name == null) {
 			// Probably in some weird block break path
-			return nbt;
+			return;
 		}
 
 		nbt.setString("name", name);
@@ -113,7 +115,7 @@ public class TileMultiblock extends SyncdTileEntity implements ITickable {
 		
 		nbt.setInteger("energy", energy.getEnergyStored());
 		
-		return nbt;
+		return;
 	}
 	
 	@Override

@@ -17,6 +17,7 @@ import java.util.HashMap;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -101,7 +102,7 @@ public abstract class Multiblock {
 					if (BlockUtil.canBeReplaced(world, compPos, false)) {
 						world.destroyBlock(compPos, true);
 					} else {
-						player.sendMessage(ChatText.INVALID_BLOCK.getMessage(compPos.getX(), compPos.getY(), compPos.getZ()));
+						player.addChatMessage(ChatText.INVALID_BLOCK.getMessage(compPos.getX(), compPos.getY(), compPos.getZ()));
 						return;
 					}
 				}
@@ -122,9 +123,9 @@ public abstract class Multiblock {
 		}
 		
 		if (missing.size() != 0) {
-			player.sendMessage(ChatText.STOCK_MISSING.getMessage());
+			player.addChatMessage(ChatText.STOCK_MISSING.getMessage());
 			for (String name : missing.keySet()) {
-				player.sendMessage(new TextComponentString(String.format("  - %d x %s", missing.get(name), name)));
+				player.sendMessage(new ChatComponentText(String.format("  - %d x %s", missing.get(name), name)));
 			}
 		}
 	}

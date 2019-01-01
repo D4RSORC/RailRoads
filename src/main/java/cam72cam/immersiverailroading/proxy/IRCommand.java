@@ -11,6 +11,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 
 public class IRCommand extends CommandBase {
 
@@ -56,7 +57,7 @@ public class IRCommand extends CommandBase {
 				}
 			});
 			for (EntityRollingStock ent : ents) {
-				sender.sendMessage(new TextComponentString(String.format("%s : %s - %s : %s", ent.getPersistentID(), ent.getEntityId(), ent.getDefinitionID(), ent.getPosition())));
+				sender.addChatMessage(new ChatComponentText(String.format("%s : %s - %s : %s", ent.getPersistentID(), ent.getEntityId(), ent.getDefinitionID(), ent.getPosition())));
 			}
 			return;
 		}

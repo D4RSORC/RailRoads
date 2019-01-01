@@ -3,6 +3,9 @@ package cam72cam.immersiverailroading.multiblock;
 import cam72cam.immersiverailroading.IRItems;
 import cam72cam.immersiverailroading.items.nbt.ItemGauge;
 import cam72cam.immersiverailroading.tile.TileMultiblock;
+import cam72cam.immersiverailroading.util.energy.IEnergyStorage;
+import cam72cam.immersiverailroading.util.math.BlockPos;
+import cam72cam.immersiverailroading.util.math.Rotation;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -59,13 +62,13 @@ public class RailRollerMultiblock extends Multiblock {
 		}
 
 		@Override
-		public boolean onBlockActivated(EntityPlayer player, EnumHand hand, BlockPos offset) {
+		public boolean onBlockActivated(EntityPlayer player, BlockPos offset) {
 			if (world.isRemote) {
 				return false;
 			}
 			if (!player.isSneaking()) {
-				ItemStack held = player.getHeldItem(hand);
-				if (held.isEmpty() && outputFull()) {
+				ItemStack held = player.getHeldItem();
+				if (held == null && outputFull()) {
 					TileMultiblock outputTe = getTile(output);
 					if (outputTe == null) {
 						return false;
@@ -73,18 +76,18 @@ public class RailRollerMultiblock extends Multiblock {
 
 					ItemStack outstack = outputTe.getContainer().getStackInSlot(0);
 					world.spawnEntityInWorld(new EntityItem(world, player.posX, player.posY, player.posZ, outstack));
-					outputTe.getContainer().setStackInSlot(0, ItemStack.EMPTY);
+					outputTe.getContainer().setStackInSlot(0, null);
 				} else if (held.getItem() == IRItems.ITEM_CAST_RAIL) {
 					TileMultiblock inputTe = getTile(input);
 					if (inputTe == null) {
 						return false;
 					}
-					if (inputTe.getContainer().getStackInSlot(0).isEmpty()) {
+					if (inputTe.getContainer().getStackInSlot(0) == null) {
 						ItemStack inputStack = held.copy();
 						inputStack.setCount(1);
 						inputTe.getContainer().setStackInSlot(0, inputStack);
 						held.shrink(1);
-						player.setHeldItem(hand, held);
+						player.setHeldItem(held);
 					}
 				}
 			}

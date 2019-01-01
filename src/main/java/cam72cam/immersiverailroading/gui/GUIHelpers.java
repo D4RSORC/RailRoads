@@ -23,7 +23,7 @@ public class GUIHelpers {
         
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         
-		Tessellator tessellator = Tessellator.getInstance();
+		Tessellator tessellator = Tessellator.instance;
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 		bufferbuilder.pos((double)(x + 0), (double)(y + height), (double)zLevel ).endVertex();
@@ -39,7 +39,7 @@ public class GUIHelpers {
 	
 	public static void texturedRect(double x, double y, double width, double height) {
 		double zLevel = 0;
-		Tessellator tessellator = Tessellator.getInstance();
+		Tessellator tessellator = Tessellator.instance;
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		bufferbuilder.pos((double)(x + 0), (double)(y + height), (double)zLevel ).tex(0, 1).endVertex();
@@ -69,7 +69,7 @@ public class GUIHelpers {
         float minU = sprite.getMinU();
         float minV = sprite.getMinV();
         
-        Tessellator tessellator = Tessellator.getInstance();
+        Tessellator tessellator = Tessellator.instance;
         BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX);	        
         for (int offY = 0; offY < height; offY += iH) {

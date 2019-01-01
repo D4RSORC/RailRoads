@@ -4,6 +4,9 @@ import cam72cam.immersiverailroading.ImmersiveRailroading;
 import cam72cam.immersiverailroading.library.GuiTypes;
 import cam72cam.immersiverailroading.tile.TileMultiblock;
 import cam72cam.immersiverailroading.util.OreHelper;
+import cam72cam.immersiverailroading.util.energy.IEnergyStorage;
+import cam72cam.immersiverailroading.util.math.BlockPos;
+import cam72cam.immersiverailroading.util.math.Rotation;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -68,20 +71,20 @@ public class PlateRollerMultiblock extends Multiblock {
 		}
 
 		@Override
-		public boolean onBlockActivated(EntityPlayer player, EnumHand hand, BlockPos offset) {
+		public boolean onBlockActivated(EntityPlayer player, BlockPos offset) {
 			if (!player.isSneaking()) {
-				ItemStack held = player.getHeldItem(hand);
-				if (held.isEmpty()) {
+				ItemStack held = player.getHeldItem();
+				if (held == null)) {
 					TileMultiblock outputTe = getTile(output);
 					if (outputTe == null) {
 						return false;
 					}
 					
-					if (!outputTe.getContainer().getStackInSlot(0).isEmpty()) {
+					if (outputTe.getContainer().getStackInSlot(0) != null) {
 						if (!world.isRemote) {
 							ItemStack outstack = outputTe.getContainer().getStackInSlot(0);
-							world.spawnEntity(new EntityItem(world, player.posX, player.posY, player.posZ, outstack));
-							outputTe.getContainer().setStackInSlot(0, ItemStack.EMPTY);
+							world.spawnEntityInWorld(new EntityItem(world, player.posX, player.posY, player.posZ, outstack));
+							outputTe.getContainer().setStackInSlot(0, null);
 						}
 						return true;
 					}
@@ -90,13 +93,13 @@ public class PlateRollerMultiblock extends Multiblock {
 					if (inputTe == null) {
 						return false;
 					}
-					if (inputTe.getContainer().getStackInSlot(0).isEmpty()) {
+					if (inputTe.getContainer().getStackInSlot(0) == null) {
 						if (!world.isRemote) {
 							ItemStack inputStack = held.copy();
 							inputStack.setCount(1);
 							inputTe.getContainer().setStackInSlot(0, inputStack);
 							held.shrink(1);
-							player.setHeldItem(hand, held);
+							player.setHeldItem(held);
 						}
 					}
 					return true;

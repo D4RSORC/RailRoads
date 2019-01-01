@@ -4,6 +4,9 @@ import cam72cam.immersiverailroading.library.TrackItems;
 import cam72cam.immersiverailroading.tile.TileRailBase;
 import cam72cam.immersiverailroading.util.Speed;
 import cam72cam.immersiverailroading.util.VecUtil;
+import cam72cam.immersiverailroading.util.math.BlockPos;
+import cam72cam.immersiverailroading.util.math.MathHelper;
+import cam72cam.immersiverailroading.util.math.Vec3d;
 import net.minecraft.world.World;
 import trackapi.lib.ITrack;
 
@@ -107,7 +110,8 @@ public class MovementSimulator {
 		
 
 		position.position = position.position.add(deltaCenter);
-		if (world.isAirBlock(new BlockPos(position.position))) {
+		BlockPos pos = new BlockPos(position.position);
+		if (world.isAirBlock(pos.getX(),pos.getY(),pos.getZ())) {
 			// Fall
 			position.position = position.position.addVector(0, -0.1, 0);
 		}
@@ -123,7 +127,8 @@ public class MovementSimulator {
 			return currentPosition;
 		}
 		// Not using bogey yaw here, is that OK?
-		Vec3d result = rail.getNextPosition(currentPosition, VecUtil.fromWrongYaw(distance, rotationYaw));
+		trackapi.util.Vec3d vec = rail.getNextPosition(currentPosition.getVec(), VecUtil.fromWrongYaw(distance, rotationYaw).getVec());
+		Vec3d result = new Vec3d (vec.x,vec.y,vec.z);
 		if (result == null) {
 			position.isOffTrack = true;
 			return currentPosition;

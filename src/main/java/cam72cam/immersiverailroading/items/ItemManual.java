@@ -11,6 +11,8 @@ import cam72cam.immersiverailroading.items.nbt.ItemMultiblockType;
 import cam72cam.immersiverailroading.library.GuiText;
 import cam72cam.immersiverailroading.multiblock.MultiblockRegistry;
 import cam72cam.immersiverailroading.util.BlockUtil;
+import cam72cam.immersiverailroading.util.math.BlockPos;
+import cam72cam.immersiverailroading.util.math.EnumFacing;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
@@ -18,7 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
@@ -30,7 +32,7 @@ public class ItemManual extends Item {
 		super();
 		
 		setUnlocalizedName(ImmersiveRailroading.MODID + ":" + NAME);
-		setRegistryName(new ResourceLocation(ImmersiveRailroading.MODID, NAME));
+		//setRegistryName(new ResourceLocation(ImmersiveRailroading.MODID, NAME));
         this.setCreativeTab(ItemTabs.MAIN_TAB);
 	}
 	
@@ -43,15 +45,15 @@ public class ItemManual extends Item {
     }
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+	public ItemStack onItemRightClick(ItemStack itemIn, World world, EntityPlayer player) {
 		if (player.isSneaking()) {
 			if (!world.isRemote) {
-				ItemStack item = player.getHeldItem(hand);
+				ItemStack item = player.getHeldItem();
 				String current = ItemMultiblockType.get(item);
 				List<String> keys = MultiblockRegistry.keys();
 				current = keys.get((keys.indexOf(current) + 1) % (keys.size()));
 				ItemMultiblockType.set(item, current);
-				player.sendMessage(new TextComponentString("Placing: " + current));
+				player.addChatMessage(new ChatComponentText("Placing: " + current));
 			}
 		} else {
 			if (world.isRemote) {
@@ -71,13 +73,13 @@ public class ItemManual extends Item {
 				}
 			}
 		}
-		return super.onItemRightClick(world, player, hand);
+		return super.onItemRightClick(itemIn, world, player);
 	}
 	
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public boolean onItemUse(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
-			ItemStack item = player.getHeldItem(hand);
+			ItemStack item = player.getHeldItem();
 			String current = ItemMultiblockType.get(item);
 			BlockPos realPos = pos;
 			if (facing == EnumFacing.DOWN) {
@@ -88,6 +90,6 @@ public class ItemManual extends Item {
 			}
 			MultiblockRegistry.get(current).place(world, player, realPos, BlockUtil.rotFromFacing(EnumFacing.fromAngle(player.rotationYawHead+180)));
 		}
-		return EnumActionResult.SUCCESS;
+		return true;
 	}
 }

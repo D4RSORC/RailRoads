@@ -32,7 +32,7 @@ public class MRSSyncPacket implements IMessage {
 		this.dimension = mrs.dimension;
 		this.entityID = mrs.getEntityId();
 		this.positions = positions;
-		this.serverTPS = ConfigDebug.serverTickCompensation ? 20 : CommonProxy.getServerTPS(mrs.getEntityWorld(), positions.size());
+		this.serverTPS = ConfigDebug.serverTickCompensation ? 20 : CommonProxy.getServerTPS(mrs.worldObj, positions.size());
 	}
 
 	public void applyTo(EntityMoveableRollingStock mrs) {

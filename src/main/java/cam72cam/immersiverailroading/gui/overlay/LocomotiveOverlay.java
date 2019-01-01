@@ -40,7 +40,7 @@ public class LocomotiveOverlay extends Gui {
 
 	public LocomotiveOverlay() {
 		mc = Minecraft.getMinecraft();
-		ScaledResolution scaled = new ScaledResolution(mc);
+		ScaledResolution scaled = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		screenWidth = scaled.getScaledWidth();
 		screenHeight = scaled.getScaledHeight();
 		

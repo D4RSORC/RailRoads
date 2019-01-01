@@ -6,6 +6,7 @@ import cam72cam.immersiverailroading.tile.TileRailBase;
 import cam72cam.immersiverailroading.util.math.BlockPos;
 import cam72cam.immersiverailroading.util.math.EnumFacing;
 import cam72cam.immersiverailroading.util.math.Rotation;
+import cam72cam.immersiverailroading.util.math.Vec3d;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGrass;
 import net.minecraft.block.BlockLeaves;
@@ -58,12 +59,11 @@ public class BlockUtil {
 		return false;
 	}
 	
-	public static IBlockState itemToBlockState(ItemStack stack) {
+	public static int itemToBlockState(ItemStack stack) {
 		Block block = Block.getBlockFromItem(stack.getItem());
-		@SuppressWarnings("deprecation")
-		IBlockState gravelState = block.getStateFromMeta(stack.getMetadata());
+		int gravelState = 0;
 		if (block instanceof BlockLog ) {
-			gravelState = gravelState.withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Z);
+			gravelState = stack.getItemDamage();
 		}
 		return gravelState;
 	}
@@ -73,7 +73,7 @@ public class BlockUtil {
 	}
 	
 	public static boolean isRail(World world, BlockPos pos) {
-		return Util.getTileEntity(world, new Vec3d(pos), true) != null;
+		return Util.getTileEntity(world, new Vec3d(pos).getVec(), true) != null;
 	}
 	
 	public static Rotation rotFromFacing(EnumFacing facing) {

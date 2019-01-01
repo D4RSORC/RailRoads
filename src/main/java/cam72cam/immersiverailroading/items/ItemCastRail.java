@@ -20,7 +20,7 @@ public static final String NAME = "item_cast_rail";
 	public ItemCastRail() {
 		super();
 		setUnlocalizedName(ImmersiveRailroading.MODID + ":" + NAME);
-		setRegistryName(new ResourceLocation(ImmersiveRailroading.MODID, NAME));
+		//setRegistryName(new ResourceLocation(ImmersiveRailroading.MODID, NAME));
         this.setCreativeTab(ItemTabs.MAIN_TAB);
         this.setMaxStackSize(16);
 	}

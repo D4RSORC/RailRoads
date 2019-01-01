@@ -16,7 +16,7 @@ public class SteamLocomotiveOverlay extends LocomotiveOverlay {
 		}
 		LocomotiveSteam loco = (LocomotiveSteam) riding;
 		drawBackground(loco);
-		drawGauge(0xAA0F0FFF, ((float)loco.getLiquidAmount())/Fluid.BUCKET_VOLUME, loco.getTankCapacity().Buckets(), "B");
+		drawGauge(0xAA0F0FFF, ((float)loco.getLiquidAmount())/1000, loco.getTankCapacity().Buckets(), "B");
 		drawGauge(0x99DDDDDD, loco.getBoilerPressure(), loco.getDefinition().getMaxPSI(loco.gauge), "PSI");
 		
 		int boilerColor = 0x99d1c715;

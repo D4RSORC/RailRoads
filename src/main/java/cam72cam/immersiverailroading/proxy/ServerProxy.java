@@ -29,7 +29,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 
-@EventBusSubscriber(Side.SERVER)
 public class ServerProxy extends CommonProxy {
 	private static int tickCount = 0;
 	private static Map<UUID, UUID> logoffRide = new HashMap<UUID, UUID>();

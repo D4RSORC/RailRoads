@@ -26,7 +26,7 @@ public class PreviewRenderPacket implements IMessage {
 	}
 
 	public PreviewRenderPacket(TileRailPreview preview) {
-		this.dimension = preview.getWorld().provider.getDimension();
+		this.dimension = preview.getWorldObj().provider.dimensionId;
 		this.preview = preview;
 	}
 

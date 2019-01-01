@@ -29,11 +29,11 @@ public class ItemLargeWrench extends ItemTool {
 	public ItemLargeWrench() {
 		super(-3.2F, ToolMaterial.IRON, new HashSet<Block>());
 		setUnlocalizedName(ImmersiveRailroading.MODID + ":" + NAME);
-		setRegistryName(new ResourceLocation(ImmersiveRailroading.MODID, NAME));
+		//setRegistryName(new ResourceLocation(ImmersiveRailroading.MODID, NAME));
         this.setCreativeTab(ItemTabs.MAIN_TAB);
 	}
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public boolean onItemUse(EntityPlayer player, World world, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (BlockUtil.isIRRail(world, pos)) {
 			TileRailBase te = TileRailBase.get(world, pos);
 			if (te != null) {
@@ -45,9 +45,9 @@ public class ItemLargeWrench extends ItemTool {
 						ItemStack stack = new ItemStack(IRItems.ITEM_AUGMENT, 1);
 						ItemAugmentType.set(stack, augment);
 						ItemGauge.set(stack, Gauge.from(te.getTrackGauge()));
-						world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack));
+						world.spawnEntityInWorld(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack));
 					}
-					return EnumActionResult.SUCCESS;
+					return true;
 				}
 				TileRail parent = te.getParentTile();
 				if (!world.isRemote) {
@@ -59,10 +59,10 @@ public class ItemLargeWrench extends ItemTool {
 		} else {
 			for (String key : MultiblockRegistry.keys()) {
 				if (MultiblockRegistry.get(key).tryCreate(world, pos)) {
-					return EnumActionResult.SUCCESS;
+					return true;
 				}
 			}
 		}
-		return EnumActionResult.PASS;
+		return true;
 	}
 }

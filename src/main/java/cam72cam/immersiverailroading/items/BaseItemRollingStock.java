@@ -7,6 +7,7 @@ import cam72cam.immersiverailroading.items.nbt.ItemDefinition;
 import cam72cam.immersiverailroading.library.ChatText;
 import cam72cam.immersiverailroading.registry.EntityRollingStockDefinition;
 import cam72cam.immersiverailroading.util.SpawnUtil;
+import cam72cam.immersiverailroading.util.math.BlockPos;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,19 +28,19 @@ public abstract class BaseItemRollingStock extends Item {
 		return super.getUnlocalizedName(stack);
 	}
 	
-	public static EnumActionResult tryPlaceStock(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, List<ItemComponentType> parts) {
-		ItemStack stack = player.getHeldItem(hand);
+	public static void tryPlaceStock(EntityPlayer player, World worldIn, BlockPos pos, List<ItemComponentType> parts) {
+		ItemStack stack = player.getHeldItem();
 		
 		EntityRollingStockDefinition def = ItemDefinition.get(stack);
 		if (def == null) {
-			player.sendMessage(ChatText.STOCK_INVALID.getMessage());
-			return EnumActionResult.FAIL;
+			player.addChatMessage(ChatText.STOCK_INVALID.getMessage());
+			return;
 		}
 		
 		if (parts == null) {
 			parts = def.getItemComponents();
 		}
 		
-		return SpawnUtil.placeStock(player, hand, worldIn, pos, def, parts);
+		SpawnUtil.placeStock(player, worldIn, pos, def, parts);
 	}
 }

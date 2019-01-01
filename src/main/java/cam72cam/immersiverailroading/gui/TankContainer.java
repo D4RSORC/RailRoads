@@ -1,6 +1,7 @@
 package cam72cam.immersiverailroading.gui;
 
 import cam72cam.immersiverailroading.entity.FreightTank;
+import cam72cam.immersiverailroading.util.items.IItemHandler;
 import net.minecraft.inventory.IInventory;
 
 public class TankContainer extends ContainerBase {

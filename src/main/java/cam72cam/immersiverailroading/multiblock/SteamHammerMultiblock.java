@@ -4,6 +4,11 @@ import cam72cam.immersiverailroading.ImmersiveRailroading;
 import cam72cam.immersiverailroading.items.nbt.ItemRawCast;
 import cam72cam.immersiverailroading.library.GuiTypes;
 import cam72cam.immersiverailroading.tile.TileMultiblock;
+import cam72cam.immersiverailroading.util.energy.IEnergyStorage;
+import cam72cam.immersiverailroading.util.items.ItemStackHandler;
+import cam72cam.immersiverailroading.util.math.BlockPos;
+import cam72cam.immersiverailroading.util.math.Rotation;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -56,7 +61,7 @@ public class SteamHammerMultiblock extends Multiblock {
 		}
 
 		@Override
-		public boolean onBlockActivated(EntityPlayer player, EnumHand hand, BlockPos offset) {
+		public boolean onBlockActivated(EntityPlayer player, BlockPos offset) {
 			if (isCenter(offset)) {
 				if (!world.isRemote) {
 					BlockPos pos = getPos(offset);
@@ -102,7 +107,7 @@ public class SteamHammerMultiblock extends Multiblock {
 			
 			if (world.isRemote) {
 				if (te.getRenderTicks() % 10 == 0 && te.getCraftProgress() != 0) {
-					world.playSound(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1.0f, 0.2f, false);
+					world.playSound(te.xCoord, te.yCoord, te.zCoord, SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1.0f, 0.2f, false);
 				}
 				return;
 			}

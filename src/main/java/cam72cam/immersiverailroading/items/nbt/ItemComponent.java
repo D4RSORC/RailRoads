@@ -9,7 +9,7 @@ public class ItemComponent {
 		if (stack.getTagCompound() != null){
 			return ItemComponentType.values()[stack.getTagCompound().getInteger("componentType")];
 		}
-		stack.setCount(0);
+		stack.stackSize = 0;
 		return ItemComponentType.values()[0];
 	}
 	public static void setComponentType(ItemStack stack, ItemComponentType item) {

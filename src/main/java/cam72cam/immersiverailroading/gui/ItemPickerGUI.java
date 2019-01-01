@@ -3,6 +3,7 @@ package cam72cam.immersiverailroading.gui;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+import cam72cam.immersiverailroading.util.math.NonNullList;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
@@ -63,7 +64,7 @@ public class ItemPickerGUI extends GuiScreen {
 	}
 	
 	@Override
-	public void actionPerformed(GuiButton button) throws IOException {
+	public void actionPerformed(GuiButton button) {
 		for (GuiButton itemButton: this.buttonList) {
 			if (itemButton == button) {
 				this.choosenItem = ((ItemButton)button).stack;
@@ -74,14 +75,14 @@ public class ItemPickerGUI extends GuiScreen {
 	}
 	
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+	protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == 1) {
 			onExit.accept(null);
         }
 	}
 	
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 }

@@ -23,7 +23,7 @@ public class SteamHammerContainerGui extends ContainerGuiBase {
     }
     
     @Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+	protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == 1) {
 			this.mc.displayGuiScreen(null);
 			if (this.mc.currentScreen == null)

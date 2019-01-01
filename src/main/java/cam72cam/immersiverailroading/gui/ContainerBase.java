@@ -1,5 +1,6 @@
 package cam72cam.immersiverailroading.gui;
 
+import cam72cam.immersiverailroading.util.items.IItemHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -103,7 +104,7 @@ public abstract class ContainerBase extends Container implements ISyncableSlots 
         for (int i = 0; i < this.inventorySlots.size(); ++i)
         {
             ItemStack itemstack = this.inventorySlots.get(i).getStack();
-            itemstack = itemstack.isEmpty() ? ItemStack.EMPTY : itemstack.copy();
+            itemstack = itemstack == null ? null : itemstack.copy();
 
             for (int j = 0; j < this.listeners.size(); ++j)
             {
@@ -122,7 +123,7 @@ public abstract class ContainerBase extends Container implements ISyncableSlots 
 	
 	@Override
     public final ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
+        ItemStack itemstack = null;
         Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
@@ -130,14 +131,14 @@ public abstract class ContainerBase extends Container implements ISyncableSlots 
             itemstack = itemstack1.copy();
             if (index < numSlots()) {
             	if (!this.mergeItemStack(itemstack1, numSlots(), this.inventorySlots.size(), true)) {
-                    return ItemStack.EMPTY;
+                    return null;
                 }
             } else if (!this.mergeItemStack(itemstack1, 0, numSlots(), false)) {
-                return ItemStack.EMPTY;
+                return null;
             }
 
-            if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+            if (itemstack1 == null) {
+                slot.putStack(null);
             } else {
                 slot.onSlotChanged();
             }

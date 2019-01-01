@@ -12,6 +12,7 @@ import cam72cam.immersiverailroading.library.CraftingType;
 import cam72cam.immersiverailroading.library.ItemComponentType;
 import cam72cam.immersiverailroading.registry.EntityRollingStockDefinition;
 import cam72cam.immersiverailroading.util.OreHelper;
+import cam72cam.immersiverailroading.util.math.NonNullList;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 

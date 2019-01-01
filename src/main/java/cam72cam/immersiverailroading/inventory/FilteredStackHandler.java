@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import cam72cam.immersiverailroading.util.items.ItemStackHandler;
 import net.minecraft.item.ItemStack;
 
 public class FilteredStackHandler extends ItemStackHandler {
@@ -16,7 +17,7 @@ public class FilteredStackHandler extends ItemStackHandler {
 	}
     
     public boolean checkSlot(int slot, @Nonnull ItemStack stack) {
-    	if (stack.isEmpty()) {
+    	if (stack == null) {
     		return true;
     	}
     	SlotFilter chosen = defaultFilter;

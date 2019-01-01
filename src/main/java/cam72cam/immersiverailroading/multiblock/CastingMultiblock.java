@@ -8,11 +8,18 @@ import cam72cam.immersiverailroading.library.GuiTypes;
 import cam72cam.immersiverailroading.tile.TileMultiblock;
 import cam72cam.immersiverailroading.util.ItemCastingCost;
 import cam72cam.immersiverailroading.util.ParticleUtil;
+import cam72cam.immersiverailroading.util.energy.IEnergyStorage;
+import cam72cam.immersiverailroading.util.math.BlockPos;
+import cam72cam.immersiverailroading.util.math.EnumParticleTypes;
+import cam72cam.immersiverailroading.util.math.Rotation;
+import cam72cam.immersiverailroading.util.math.Vec3d;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
@@ -110,7 +117,7 @@ public class CastingMultiblock extends Multiblock {
 		}
 
 		@Override
-		public boolean onBlockActivated(EntityPlayer player, EnumHand hand, BlockPos offset) {
+		public boolean onBlockActivated(EntityPlayer player, BlockPos offset) {
 			TileMultiblock outTe = getTile(output);
 			if (outTe == null) {
 				return false;
@@ -119,10 +126,10 @@ public class CastingMultiblock extends Multiblock {
 			if (craftTe == null) {
 				return false;
 			}
-			if (!outTe.getContainer().getStackInSlot(0).isEmpty()) {
+			if (outTe.getContainer().getStackInSlot(0) != null) {
 				if (!world.isRemote) {
-					world.spawnEntity(new EntityItem(world, player.posX, player.posY, player.posZ, outTe.getContainer().getStackInSlot(0)));
-					outTe.getContainer().setStackInSlot(0, ItemStack.EMPTY);
+					world.spawnEntityInWorld(new EntityItem(world, player.posX, player.posY, player.posZ, outTe.getContainer().getStackInSlot(0)));
+					outTe.getContainer().setStackInSlot(0, null);
 				}
 			} else {
 				if (world.isRemote) {
@@ -174,16 +181,16 @@ public class CastingMultiblock extends Multiblock {
 				if (fluidTe == null) {
 					return;
 				}
-				AxisAlignedBB bb = new AxisAlignedBB(getPos(offset.add(0, 1, 0))).grow(3, 0, 3);
+				AxisAlignedBB bb = AxisAlignedBB.getBoundingBox((getPos(offset.add(0, 1, 0))).grow(3, 0, 3);
 				List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, bb);
 				for (EntityItem item : items) {
 					if (!hasPower()) {
 						break;
 					}
-					ItemStack stack = item.getItem();
+					ItemStack stack = item.getEntityItem();
 					int cost = ItemCastingCost.getCastCost(stack);
 					if (cost != ItemCastingCost.BAD_CAST_COST) {
-						while(stack.getCount() != 0 && fluidTe.getCraftProgress() < max_volume + cost) {
+						while(stack.stackSize != 0 && fluidTe.getCraftProgress() < max_volume + cost) {
 							if (!hasPower()) {
 								break;
 							}
@@ -222,7 +229,7 @@ public class CastingMultiblock extends Multiblock {
 				}
 				
 				ItemStack item = craftTe.getCraftItem();
-				if (item == null || item.isEmpty()) {
+				if (item == null || item == null) {
 					return;
 				}
 				
@@ -231,7 +238,7 @@ public class CastingMultiblock extends Multiblock {
 					return;
 				}
 
-				if (! outTe.getContainer().getStackInSlot(0).isEmpty()) {
+				if (outTe.getContainer().getStackInSlot(0) != null) {
 					return;
 				}
 				
@@ -310,7 +317,7 @@ public class CastingMultiblock extends Multiblock {
 		public ItemStack getCraftItem() {
 			TileMultiblock craftingTe = getTile(craft);
 			if (craftingTe == null) {
-				return ItemStack.EMPTY;
+				return null;
 			}
 			return craftingTe.getCraftItem();
 		}

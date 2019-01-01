@@ -18,6 +18,7 @@ import cam72cam.immersiverailroading.registry.EntityRollingStockDefinition;
 import cam72cam.immersiverailroading.registry.LocomotiveDefinition;
 import cam72cam.immersiverailroading.tile.TileRailBase;
 import cam72cam.immersiverailroading.util.BlockUtil;
+import cam72cam.immersiverailroading.util.math.NonNullList;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.creativetab.CreativeTabs;
@@ -103,7 +104,7 @@ public class ItemRollingStock extends BaseItemRollingStock {
     }
 	
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public boolean onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (BlockUtil.isIRRail(worldIn, pos)) {
 			TileRailBase te = TileRailBase.get(worldIn, pos);
 			if (te.getAugment() != null) {
@@ -115,20 +116,20 @@ public class ItemRollingStock extends BaseItemRollingStock {
 				case ITEM_LOADER:
 				case ITEM_UNLOADER:
 					if (!worldIn.isRemote) {
-						boolean set = te.setAugmentFilter(ItemDefinition.getID(player.getHeldItem(hand)));
+						boolean set = te.setAugmentFilter(ItemDefinition.getID(player.getHeldItem()));
 						if (set) {
-							player.sendMessage(ChatText.SET_AUGMENT_FILTER.getMessage(ItemDefinition.get(player.getHeldItem(hand)).name()));
+							player.addChatMessage(ChatText.SET_AUGMENT_FILTER.getMessage(ItemDefinition.get(player.getHeldItem()).name()));
 						} else {
-							player.sendMessage(ChatText.RESET_AUGMENT_FILTER.getMessage());
+							player.addChatMessage(ChatText.RESET_AUGMENT_FILTER.getMessage());
 						}
 					}
-					return EnumActionResult.SUCCESS;
+					return true;
 				default:
 					break;
 				}
 			}
 		}
-		return tryPlaceStock(player, worldIn, pos, hand, null);
+		return tryPlaceStock(player, worldIn, pos, null);
 	}
 	
 	@Override

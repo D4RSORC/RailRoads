@@ -17,7 +17,7 @@ public class ItemDefinition {
 		if (stack.getTagCompound() != null){
 			return stack.getTagCompound().getString("defID");
 		}
-		stack.setCount(0);
+		stack.stackSize = 0;
 		return "";
 	}
 	

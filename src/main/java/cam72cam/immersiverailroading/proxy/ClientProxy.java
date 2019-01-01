@@ -80,10 +80,13 @@ import cam72cam.immersiverailroading.tile.TileRailPreview;
 import cam72cam.immersiverailroading.util.GLBoolTracker;
 import cam72cam.immersiverailroading.util.PlacementInfo;
 import cam72cam.immersiverailroading.util.RailInfo;
+import cam72cam.immersiverailroading.util.math.BlockPos;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -121,7 +124,6 @@ import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Unload;
 import paulscode.sound.SoundSystemConfig;
 
-@EventBusSubscriber(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 	private static Map<KeyTypes, KeyBinding> keys = new HashMap<KeyTypes, KeyBinding>();
 	private static Map<Integer, ExpireableList<BlockPos, TileRailPreview>> previews = new HashMap<>();
@@ -455,7 +457,7 @@ public class ClientProxy extends CommonProxy {
 				event.setCanceled(true);
 				return;
 			}
-			Entity riding = Minecraft.getMinecraft().player.getRidingEntity();
+			Entity riding = Minecraft.getMinecraft().thePlayer.getRidingEntity();
 			if (riding != null && riding instanceof EntityRidableRollingStock) {
 				ImmersiveRailroading.net.sendToServer(new MousePressPacket(button, riding.world.provider.getDimension(), riding.getEntityId()));
 				event.setCanceled(true);
@@ -785,7 +787,7 @@ public class ClientProxy extends CommonProxy {
 		previews.get(dimension).put(preview.getPos(), preview);
 	}
 	public Collection<TileRailPreview> getPreviews() {
-		ExpireableList<BlockPos, TileRailPreview> pvs = previews.get(Minecraft.getMinecraft().player.dimension);
+		ExpireableList<BlockPos, TileRailPreview> pvs = previews.get(Minecraft.getMinecraft().thePlayer.dimension);
 		if (pvs != null) {
 			return pvs.values();
 		}

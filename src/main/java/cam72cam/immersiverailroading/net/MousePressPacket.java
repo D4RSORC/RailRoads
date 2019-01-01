@@ -71,7 +71,7 @@ public class MousePressPacket implements IMessage {
 				ctx.getServerHandler().playerEntity.attackTargetEntityWithCurrentItem(matches.get(0));
 			}
 			if (message.mouseButton == 1) {
-				ctx.getServerHandler().playerEntity.interactOn(matches.get(0), EnumHand.MAIN_HAND);
+				ctx.getServerHandler().playerEntity.interactOn(matches.get(0));
 			}
 		}
 	}

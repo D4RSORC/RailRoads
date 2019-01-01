@@ -9,6 +9,8 @@ import cam72cam.immersiverailroading.ImmersiveRailroading;
 import cam72cam.immersiverailroading.entity.EntityCoupleableRollingStock;
 import cam72cam.immersiverailroading.library.Gauge;
 import cam72cam.immersiverailroading.net.SoundPacket;
+import cam72cam.immersiverailroading.util.math.Vec3d;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -24,19 +26,19 @@ public class ItemConductorWhistle extends Item {
 	public ItemConductorWhistle() {
 		super();
 		setUnlocalizedName(ImmersiveRailroading.MODID + ":" + NAME);
-		setRegistryName(new ResourceLocation(ImmersiveRailroading.MODID, NAME));
+		//setRegistryName(new ResourceLocation(ImmersiveRailroading.MODID, NAME));
         this.setCreativeTab(ItemTabs.MAIN_TAB);
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+	public ItemStack onItemRightClick(ItemStack item, World world, EntityPlayer player) {
 		if (!world.isRemote) {
 			if (cooldown.containsKey(player.getPersistentID())) {
 				int newtime = cooldown.get(player.getPersistentID());
 				if (newtime < ImmersiveRailroading.proxy.getTicks()) {
 					cooldown.remove(player.getPersistentID());
 				} else {
-					return super.onItemRightClick(world, player, hand);
+					return super.onItemRightClick(item, world, player);
 				}
 			}
 			
@@ -51,7 +53,7 @@ public class ItemConductorWhistle extends Item {
 			);
 			ImmersiveRailroading.net.sendToAllAround(packet, new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, Config.ConfigBalance.villagerConductorDistance * 1.2f));
 			
-			AxisAlignedBB bb = player.getEntityBoundingBox().grow(Config.ConfigBalance.villagerConductorDistance, 4, Config.ConfigBalance.villagerConductorDistance);
+			AxisAlignedBB bb = player.getBoundingBox().expand(Config.ConfigBalance.villagerConductorDistance, 4, Config.ConfigBalance.villagerConductorDistance);
 			List<EntityCoupleableRollingStock> carsNearby = world.getEntitiesWithinAABB(EntityCoupleableRollingStock.class, bb);
 			EntityCoupleableRollingStock closestToPlayer = null;
 			for (EntityCoupleableRollingStock car : carsNearby) {
@@ -92,6 +94,6 @@ public class ItemConductorWhistle extends Item {
 			}
 		}
 		
-		return super.onItemRightClick(world, player, hand);
+		return super.onItemRightClick(item, world, player);
 	}
 }

@@ -32,7 +32,7 @@ public class PlateRollerGUI extends GuiScreen {
 	public PlateRollerGUI(TileMultiblock te) {
 		this.tile = te;
 		currentItem = te.getCraftItem();
-		if (currentItem == null || currentItem.isEmpty()) {
+		if (currentItem == null || currentItem == null) {
 			currentItem = new ItemStack(IRItems.ITEM_PLATE, 1);
 		}
 		
@@ -79,7 +79,7 @@ public class PlateRollerGUI extends GuiScreen {
 	}
 	
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
+	protected void actionPerformed(GuiButton button) {
 		if (button == gaugeButton) {
 			gauge = gauge.next();
 			gaugeButton.displayString = GuiText.SELECTOR_GAUGE.toString(gauge);
@@ -101,26 +101,26 @@ public class PlateRollerGUI extends GuiScreen {
 		ItemPlateType.set(currentItem, plate);
     	switch (plate) {
 		case BOILER:
-			currentItem.setCount(1);
+			currentItem.stackSize = 1;
 			break;
 		case LARGE:
-			currentItem.setCount(1);
+			currentItem.stackSize = 1;
 			break;
 		case MEDIUM:
-			currentItem.setCount(4);
+			currentItem.stackSize = 4;
 			break;
 		case SMALL:
-			currentItem.setCount(8);
+			currentItem.stackSize = 8;
 			break;
 		default:
 			break;
     	}
-		currentItem.setCount(Math.max(1, (int) Math.floor(currentItem.getCount()/gauge.scale())));
+		currentItem.stackSize = Math.max(1, (int) Math.floor(currentItem.stackSize/gauge.scale()));
 		tile.setCraftItem(currentItem);
     }
 	
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+	protected void keyTyped(char typedChar, int keyCode) {
         // Enter or ESC
         if (keyCode == 1 || keyCode == 28 || keyCode == 156) {
         	sendPacket();

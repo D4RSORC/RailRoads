@@ -14,7 +14,7 @@ public class DieselLocomotiveOverlay extends LocomotiveOverlay {
 	
 	
 	public void draw() {
-		Entity riding = mc.player.getRidingEntity();
+		Entity riding = mc.thePlayer.ridingEntity;
 		if (riding == null) {
 			return;
 		}
@@ -23,7 +23,7 @@ public class DieselLocomotiveOverlay extends LocomotiveOverlay {
 		}
 		LocomotiveDiesel loco = (LocomotiveDiesel) riding;
 		drawBackground(loco);
-		drawGauge(0xAA79650c, ((float)loco.getLiquidAmount())/Fluid.BUCKET_VOLUME, loco.getTankCapacity().Buckets(), "B");
+		drawGauge(0xAA79650c, ((float)loco.getLiquidAmount())/1000, loco.getTankCapacity().Buckets(), "B");
 		int heatColor = cold;
 		if (loco.getEngineTemperature() > 75) {
 			heatColor = warm;

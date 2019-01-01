@@ -33,8 +33,8 @@ public class SyncdTileEntity extends TileEntity {
 	public void markDirty() {
 		super.markDirty();
 		if (!worldObj.isRemote) {
-			worldObj.notifyBlockUpdate(getPos(), worldObj.getBlockState(getPos()), worldObj.getBlockState(getPos()), 1 + 2 + 8);
-			worldObj.notifyNeighborsOfStateChange(pos, this.getBlockType(), true);
+			worldObj.markAndNotifyBlock(this.xCoord,this.yCoord,this.zCoord, worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord), worldObj.getBlock(this.xCoord,this.yCoord,this.zCoord), worldObj.getBlock(this.xCoord,this.yCoord,this.zCoord), 1 + 2 + 8);
+			worldObj.notifyBlockChange(this.xCoord,this.yCoord,this.zCoord, this.getBlockType());
 		}
 	}
 	
@@ -64,9 +64,9 @@ public class SyncdTileEntity extends TileEntity {
 		hasTileData = true;
 	}
 	
-	@Override
 	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound tag = super.getUpdateTag();
+		NBTTagCompound tag = new NBTTagCompound();
+		super.writeToNBT(tag);
 		this.writeToNBT(tag);
 		this.writeUpdateNBT(tag);
 		return tag;
@@ -76,13 +76,12 @@ public class SyncdTileEntity extends TileEntity {
 		return false;
 	}
 	
-	@Override 
 	public void handleUpdateTag(NBTTagCompound tag) {
 		this.readFromNBT(tag);
 		this.readUpdateNBT(tag);
-		super.handleUpdateTag(tag);
+		super.readFromNBT(tag);
 		if (updateRerender()) {
-			worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+			worldObj.markBlockRangeForRenderUpdate(this.xCoord,this.yCoord,this.zCoord, this.xCoord,this.yCoord,this.zCoord);
 		}
 		hasTileData = true;
 	}

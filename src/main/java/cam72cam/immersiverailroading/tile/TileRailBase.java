@@ -290,6 +290,13 @@ public class TileRailBase extends SyncdTileEntity implements ITrack, ITickable {
 		super.writeToNBT(nbt);
 	}
 	
+	public NBTTagCompound serializeNBT()
+    {
+        NBTTagCompound ret = new NBTTagCompound();
+        this.writeToNBT(ret);
+        return ret;
+    }
+	
 	public TileRail getParentTile() {
 		if (this.getParent() == null) {
 			return null;

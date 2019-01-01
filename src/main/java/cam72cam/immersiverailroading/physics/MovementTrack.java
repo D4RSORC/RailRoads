@@ -6,7 +6,8 @@ import cam72cam.immersiverailroading.tile.TileRail;
 import cam72cam.immersiverailroading.track.PosStep;
 import cam72cam.immersiverailroading.track.IIterableTrack;
 import cam72cam.immersiverailroading.util.VecUtil;
-import net.minecraft.util.EnumFacing;
+import cam72cam.immersiverailroading.util.math.EnumFacing;
+import cam72cam.immersiverailroading.util.math.Vec3d;
 import net.minecraft.world.World;
 import trackapi.lib.ITrack;
 import trackapi.lib.Util;
@@ -32,7 +33,7 @@ public class MovementTrack {
 		
 		for (Vec3d pos : positions) {
 			for (double height : heightSkew) {
-				ITrack te = Util.getTileEntity(world, pos.addVector(0, height + 0.35, 0), true);
+				ITrack te = Util.getTileEntity(world, pos.addVector(0, height + 0.35, 0).getVec(), true);
 				if (te != null && Gauge.from(te.getTrackGauge()) == Gauge.from(gauge)) {
 					return te;
 				}
@@ -53,7 +54,8 @@ public class MovementTrack {
 					return currentPosition;
 				}
 				Vec3d pastPos = currentPosition;
-				currentPosition = te.getNextPosition(currentPosition, VecUtil.fromWrongYaw(maxDelta, trainYaw));
+				trackapi.util.Vec3d vec = te.getNextPosition(currentPosition.getVec(), VecUtil.fromWrongYaw(maxDelta, trainYaw).getVec());
+				currentPosition = new Vec3d(vec.x,vec.y,vec.z);
 				trainYaw = VecUtil.toWrongYaw(pastPos.subtractReverse(currentPosition));
 			}
 
@@ -61,7 +63,8 @@ public class MovementTrack {
 			if (te == null) {
 				return currentPosition;
 			}
-			return te.getNextPosition(currentPosition, VecUtil.fromWrongYaw(distanceMeters % maxDelta, trainYaw));
+			trackapi.util.Vec3d vec =te.getNextPosition(currentPosition.getVec(), VecUtil.fromWrongYaw(distanceMeters % maxDelta, trainYaw).getVec());
+			return new Vec3d(vec.x,vec.y,vec.z);
 		} else {
 			return nextPositionInner(world, currentPosition, rail, trainYaw, distanceMeters);
 		}

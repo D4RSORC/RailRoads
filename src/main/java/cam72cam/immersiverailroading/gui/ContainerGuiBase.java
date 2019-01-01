@@ -116,7 +116,7 @@ public abstract class ContainerGuiBase extends GuiContainer {
 	}
     
     public void drawFluid(Fluid fluid, int x, int y, int width, int height, int scale) {
-		TextureAtlasSprite sprite = mc.getTextureMapBlocks().getAtlasSprite(fluid.getStill().toString());
+		TextureAtlasSprite sprite = mc.getTextureMapBlocks().getAtlasSprite(fluid.getStillIcon().toString());
 		if(sprite != null)
 		{
 			drawSprite(sprite, fluid.getColor(), x, y, width, height, scale);

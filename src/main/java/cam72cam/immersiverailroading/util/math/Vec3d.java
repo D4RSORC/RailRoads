@@ -39,6 +39,16 @@ public class Vec3d
     {
         this((double)vector.getX(), (double)vector.getY(), (double)vector.getZ());
     }
+    
+    public Vec3d(trackapi.util.Vec3i vector)
+    {
+        this((double)vector.getX(), (double)vector.getY(), (double)vector.getZ());
+    }
+    
+    public trackapi.util.Vec3d getVec()
+    {
+    	return new trackapi.util.Vec3d (this.x, this.y, this.z);
+    }
 
     /**
      * Returns a new vector with the result of the specified vector minus this.
